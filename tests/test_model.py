@@ -56,3 +56,4 @@ def test_model_factory():
 
     m_unet = build_model("spatiotemporal_unet")
     assert isinstance(m_unet, SpatioTemporalUNet)
+

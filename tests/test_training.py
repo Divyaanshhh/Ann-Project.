@@ -54,3 +54,4 @@ def test_metric_computation():
     assert m["dice"] > 0.9
     assert m["precision"] > 0.9
     assert m["recall"] > 0.9
+

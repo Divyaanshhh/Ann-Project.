@@ -69,3 +69,4 @@ class AutoregressiveFeedbackAdapter:
 
         adapted_step = torch.cat([c1_fire, c2_ndvi, c3_terrain, c4_ws, c5_wd, c6_dry], dim=1)
         return adapted_step
+

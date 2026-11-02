@@ -90,3 +90,4 @@ def plot_multimodal_channels_grid(step_6ch: np.ndarray, channel_names: List[str]
 
     plt.tight_layout()
     return fig
+

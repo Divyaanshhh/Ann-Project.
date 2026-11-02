@@ -151,3 +151,4 @@ class RealWildfireAdapter:
                 targets_seq.append(curr_fire[np.newaxis, :, :].astype(np.float32))
 
         return np.stack(inputs_seq, axis=0), np.stack(targets_seq, axis=0)
+

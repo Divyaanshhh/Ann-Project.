@@ -104,3 +104,4 @@ class FirecastCompoundLoss(nn.Module):
 
         loss_dict["total_loss"] = float(total.item())
         return total, loss_dict
+

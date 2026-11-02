@@ -65,3 +65,4 @@ class TemporalSequenceBuilder:
             targets.append(y_win)
 
         return np.stack(inputs, axis=0), np.stack(targets, axis=0)
+

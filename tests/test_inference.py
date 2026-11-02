@@ -57,3 +57,4 @@ def test_checkpoint_saving_and_restoration(tmp_path):
     assert metrics["iou"] == 0.82
     for p1, p2 in zip(model.parameters(), new_model.parameters()):
         assert torch.allclose(p1, p2)
+

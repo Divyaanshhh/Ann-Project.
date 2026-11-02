@@ -57,3 +57,4 @@ def build_model(
         )
     else:
         raise ValueError(f"Unsupported model_type: '{model_type}'. Choose 'convlstm' or 'spatiotemporal_unet'.")
+

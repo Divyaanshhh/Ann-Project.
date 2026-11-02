@@ -91,3 +91,4 @@ class RasterProcessor:
     def tensor_to_numpy(tensor: torch.Tensor) -> np.ndarray:
         """Converts PyTorch tensor back to detached NumPy array."""
         return tensor.detach().cpu().numpy()
+

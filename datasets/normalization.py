@@ -87,3 +87,4 @@ class SpatioTemporalNormalizer:
         with open(filepath, "r", encoding="utf-8") as f:
             stats = json.load(f)
         return cls(stats=stats)
+

@@ -85,3 +85,4 @@ class ConvLSTMCell(nn.Module):
             torch.zeros(batch_size, self.hidden_dim, height, width, device=device),
             torch.zeros(batch_size, self.hidden_dim, height, width, device=device)
         )
+

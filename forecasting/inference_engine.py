@@ -123,3 +123,4 @@ class WildfireInferenceEngine:
                 "Do NOT rely on these experimental predictions for emergency or operational decision-making."
             )
         )
+

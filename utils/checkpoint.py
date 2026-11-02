@@ -104,3 +104,4 @@ def load_checkpoint(
         checkpoint.get("metrics", {}),
         checkpoint.get("config", {})
     )
+

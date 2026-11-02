@@ -36,3 +36,4 @@ def get_logger(name: str = "firecast", log_file: Path | None = None) -> logging.
         logger.addHandler(file_handler)
 
     return logger
+

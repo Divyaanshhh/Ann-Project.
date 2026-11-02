@@ -88,3 +88,4 @@ def sanitize_nans(tensor: torch.Tensor, fill_value: float = 0.0) -> torch.Tensor
     """Safely replaces NaNs and Infs with a fallback value."""
     tensor = torch.nan_to_num(tensor, nan=fill_value, posinf=fill_value, neginf=fill_value)
     return tensor
+

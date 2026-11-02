@@ -127,3 +127,4 @@ class FirecastConfig:
 
 # Default global configuration instance
 CONFIG = FirecastConfig()
+

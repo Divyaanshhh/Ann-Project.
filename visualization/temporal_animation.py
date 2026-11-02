@@ -110,3 +110,4 @@ def create_progression_animation(
     )
 
     return fig
+

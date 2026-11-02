@@ -97,3 +97,4 @@ def plot_confusion_overlay(prediction: np.ndarray, ground_truth: np.ndarray, thr
         margin=dict(l=30, r=30, t=40, b=30)
     )
     return fig
+

@@ -47,3 +47,4 @@ def clear_gpu_cache() -> None:
     """Clears PyTorch CUDA memory cache if GPU is available."""
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
+

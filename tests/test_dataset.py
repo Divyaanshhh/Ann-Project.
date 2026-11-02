@@ -61,3 +61,4 @@ def test_real_wildfire_adapter():
     x, y = adapter.rasterize_firms_cluster(df)
     assert x.shape == (5, 6, 128, 128)
     assert y.shape == (3, 1, 128, 128)
+

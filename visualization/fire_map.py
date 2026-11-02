@@ -69,3 +69,4 @@ def create_folium_fire_map(
 
     folium.LayerControl().add_to(m)
     return m
+

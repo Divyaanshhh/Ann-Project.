@@ -175,3 +175,4 @@ The system records:
 - **NASA FIRMS**: NASA Land, Atmosphere Near real-time Capability for EOS (LANCE) / MODIS & VIIRS active fire data.
 - **USGS / SRTM**: Digital Elevation Model 30m terrain elevations.
 - **Copernicus**: Sentinel-2 Level-2A surface reflectance vegetation indices.
+

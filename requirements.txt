@@ -25,3 +25,4 @@ streamlit-folium>=0.17.0
 
 # Testing & Quality
 pytest>=8.0.0
+

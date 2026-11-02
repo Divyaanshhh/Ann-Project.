@@ -139,3 +139,4 @@ class ConvLSTMForecaster(nn.Module):
             return presence, intensity
 
         return presence
+
