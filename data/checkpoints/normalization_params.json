@@ -1,0 +1,26 @@
+{
+  "c0_fire": {
+    "min": 0.0,
+    "max": 1.0
+  },
+  "c1_ndvi": {
+    "min": -1.0,
+    "max": 1.0
+  },
+  "c2_terrain": {
+    "min": 0.0,
+    "max": 1.0
+  },
+  "c3_wind_speed": {
+    "min": 0.0,
+    "max": 35.0
+  },
+  "c4_wind_dir": {
+    "min": 0.0,
+    "max": 360.0
+  },
+  "c5_dryness": {
+    "min": 0.0,
+    "max": 1.0
+  }
+}
