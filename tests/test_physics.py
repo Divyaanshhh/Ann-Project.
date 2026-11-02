@@ -37,3 +37,4 @@ def test_compound_loss_with_physics():
     total_loss, loss_dict = criterion(pred, target, input_6ch=input_6ch)
     assert "pinn_loss" in loss_dict
     assert total_loss.item() > 0.0
+

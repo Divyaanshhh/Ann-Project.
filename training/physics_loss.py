@@ -134,3 +134,4 @@ class PhysicsInformedSpreadLoss(nn.Module):
             "mean_advection": round(float(advection.abs().mean().item()), 5),
             "mean_diffusion": round(float(diffusion.abs().mean().item()), 5)
         }
+
