@@ -66,28 +66,35 @@ class IntensityMSELoss(nn.Module):
         return weighted_loss.mean()
 
 
+from training.physics_loss import PhysicsInformedSpreadLoss
+
+
 class FirecastCompoundLoss(nn.Module):
-    """Total Compound Loss = focal_weight * Focal_Loss + intensity_weight * Intensity_MSE."""
+    """Total Compound Loss = focal_weight * Focal_Loss + intensity_weight * Intensity_MSE + physics_weight * PINN_Loss."""
 
     def __init__(
         self,
         focal_weight: float = CONFIG.training.focal_weight,
         intensity_weight: float = CONFIG.training.intensity_weight,
+        physics_weight: float = 0.25,
         alpha: float = CONFIG.training.focal_alpha,
         gamma: float = CONFIG.training.focal_gamma
     ):
         super().__init__()
         self.focal_weight = focal_weight
         self.intensity_weight = intensity_weight
+        self.physics_weight = physics_weight
         self.focal_loss = BinaryFocalLoss(alpha=alpha, gamma=gamma)
         self.intensity_loss = IntensityMSELoss()
+        self.physics_loss = PhysicsInformedSpreadLoss()
 
     def forward(
         self,
         pred_presence: torch.Tensor,
         target_presence: torch.Tensor,
         pred_intensity: torch.Tensor | None = None,
-        target_intensity: torch.Tensor | None = None
+        target_intensity: torch.Tensor | None = None,
+        input_6ch: torch.Tensor | None = None
     ) -> Tuple[torch.Tensor, Dict[str, float]]:
         """Computes total loss and itemized dictionary."""
         # Binarize presence target for focal loss
@@ -101,6 +108,11 @@ class FirecastCompoundLoss(nn.Module):
             l_mse = self.intensity_loss(pred_intensity, target_intensity)
             total = total + self.intensity_weight * l_mse
             loss_dict["intensity_mse"] = float(l_mse.item())
+
+        if input_6ch is not None:
+            l_pinn, pinn_meta = self.physics_loss(pred_presence, input_6ch)
+            total = total + self.physics_weight * l_pinn
+            loss_dict.update(pinn_meta)
 
         loss_dict["total_loss"] = float(total.item())
         return total, loss_dict

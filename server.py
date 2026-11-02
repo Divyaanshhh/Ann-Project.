@@ -47,9 +47,10 @@ app.add_middleware(
 FRONTEND_DIR = CONFIG.project_root / "frontend"
 FRONTEND_DIR.mkdir(parents=True, exist_ok=True)
 
-# Global cached engine
-_engine: Optional[WildfireInferenceEngine] = None
-_normalizer = SpatioTemporalNormalizer()
+from forecasting.vulnerability_engine import InfrastructureVulnerabilityEngine
+
+_engine = None
+_vuln_engine = InfrastructureVulnerabilityEngine()
 
 
 def get_engine() -> WildfireInferenceEngine:
@@ -196,6 +197,9 @@ def run_prediction(params: Optional[SimulationParams] = None):
             "max_uncertainty": round(max_unc, 4)
         })
 
+    # Compute infrastructure vulnerability and community hazard exposure
+    vuln_assessment = _vuln_engine.assess_full_forecast(result.presence_probs[:, 0])
+
     return {
         "status": "success",
         "horizons": [12, 24, 48],
@@ -203,8 +207,18 @@ def run_prediction(params: Optional[SimulationParams] = None):
         "presence_probs": result.presence_probs[:, 0].tolist(), # (3, 128, 128)
         "uncertainty_std": result.uncertainty_std[:, 0].tolist(), # (3, 128, 128)
         "high_uncertainty_mask": result.high_uncertainty_mask[:, 0].tolist(),
+        "vulnerability": vuln_assessment,
         "disclaimer": result.disclaimer
     }
+
+
+@app.get("/api/vulnerability")
+def get_vulnerability():
+    """Returns infrastructure vulnerability assessment on current fire state."""
+    data = np.load(CONFIG.dataset_path)
+    engine = get_engine()
+    result = engine.predict(data["inputs"][0], return_uncertainty=False)
+    return _vuln_engine.assess_full_forecast(result.presence_probs[:, 0])
 
 
 @app.get("/api/real-firms")

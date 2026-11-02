@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <style>
     :root {
       --bg-dark: #07090E;
@@ -522,6 +524,178 @@
       box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
     }
 
+    /* 3D Digital Twin Viewport */
+    .three-viewport {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 520px;
+      background: radial-gradient(circle at 50% 50%, #0d1527 0%, #06080d 100%);
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .three-canvas-container {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    .three-canvas-container:active {
+      cursor: grabbing;
+    }
+
+    .three-overlay-controls {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .three-ctrl-btn {
+      background: rgba(14, 19, 31, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .three-ctrl-btn:hover {
+      border-color: var(--accent-ember);
+      color: #FFF;
+    }
+
+    .three-ctrl-btn.active {
+      background: rgba(255, 87, 34, 0.35);
+      border-color: var(--accent-fire);
+      color: #FFF;
+      box-shadow: 0 0 10px rgba(255, 69, 0, 0.3);
+    }
+
+    .three-badge-info {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      background: rgba(14, 19, 31, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Infrastructure Risk & Vulnerability Viewport */
+    .vuln-viewport {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .vuln-banner-card {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.14), rgba(249, 115, 22, 0.08));
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .vuln-score-circle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(11, 14, 20, 0.9);
+      border: 3px solid var(--accent-fire);
+      box-shadow: 0 0 20px rgba(255, 69, 0, 0.45);
+    }
+
+    .vuln-score-num {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent-ember);
+      line-height: 1;
+    }
+
+    .vuln-score-sub {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .vuln-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .vuln-kpi-card {
+      background: #0B0E14;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .vuln-table-card {
+      background: #0B0E14;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .vuln-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .vuln-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: rgba(20, 28, 46, 0.7);
+      color: var(--text-dim);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .vuln-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .rec-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+    }
+
     /* Timeline Scrubber */
     .timeline-scrubber {
       background: var(--bg-surface-glass);
@@ -785,6 +959,8 @@
           <button class="tab-pill" id="tabSync">Synchronized 4-Panel</button>
           <button class="tab-pill" id="tabChannels">6-Channel Layers</button>
           <button class="tab-pill" id="tabUncertainty">Uncertainty Map</button>
+          <button class="tab-pill" id="tab3D">3D Digital Twin</button>
+          <button class="tab-pill" id="tabVuln">Infrastructure Risk</button>
         </div>
 
         <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-dim);">
@@ -907,6 +1083,110 @@
         </div>
       </div>
 
+      <!-- Viewport 5: 3D Interactive Digital Twin -->
+      <div class="three-viewport" id="viewport3D">
+        <div class="three-overlay-controls">
+          <button class="three-ctrl-btn active" id="btn3DModeTerrain">Topography Shading</button>
+          <button class="three-ctrl-btn" id="btn3DModeWireframe">Wireframe Mesh</button>
+          <button class="three-ctrl-btn active" id="btn3DParticles">Smoke & Embers: ON</button>
+          <button class="three-ctrl-btn" id="btn3DResetCam">Reset View</button>
+          <div style="display:flex; align-items:center; gap:6px; background:rgba(14,19,31,0.85); padding:4px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.15);">
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--text-dim);">ELEV:</span>
+            <button class="three-ctrl-btn" id="btn3DElev1x" style="padding:2px 6px;">1x</button>
+            <button class="three-ctrl-btn active" id="btn3DElev2x" style="padding:2px 6px;">2x</button>
+            <button class="three-ctrl-btn" id="btn3DElev4x" style="padding:2px 6px;">4x</button>
+          </div>
+        </div>
+        <div class="three-canvas-container" id="threeContainer"></div>
+        <div class="three-badge-info">
+          WebGL 3D Digital Twin • DEM Topography (128×128 Vertices) • Rotate: Left Drag | Pan: Right Drag | Zoom: Scroll
+        </div>
+        <canvas id="threeTextureCanvas" width="128" height="128" style="display:none;"></canvas>
+      </div>
+
+      <!-- Viewport 6: Infrastructure Risk & Vulnerability Analysis -->
+      <div class="vuln-viewport" id="viewportVuln">
+        <!-- Hazard Index Banner -->
+        <div class="vuln-banner-card">
+          <div>
+            <div style="font-family:var(--font-heading); font-size:18px; font-weight:700; color:#FFF; display:flex; align-items:center; gap:8px;">
+              <span>⚠️</span> WILDLAND-URBAN INTERFACE (WUI) THREAT ASSESSMENT
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+              Coupled spatial analysis of fire progression perimeter with infrastructure, road corridors, and structures.
+            </div>
+            <div style="margin-top:10px; display:flex; gap:10px;">
+              <span class="rec-badge" id="vulnSeverityBadge" style="background:rgba(239,68,68,0.2); color:#EF4444; border:1px solid #EF4444;">HIGH THREAT</span>
+              <span class="rec-badge" style="background:rgba(0,229,255,0.15); color:var(--accent-cyan); border:1px solid rgba(0,229,255,0.3);">NASA FIRMS ACTIVE ZONE</span>
+            </div>
+          </div>
+          <div class="vuln-score-circle">
+            <span class="vuln-score-num" id="vulnHazardScore">78.4</span>
+            <span class="vuln-score-sub">HAZARD INDEX</span>
+          </div>
+        </div>
+
+        <!-- 4 KPI Cards -->
+        <div class="vuln-kpi-grid">
+          <div class="vuln-kpi-card">
+            <div class="stat-label">Exposed Structures</div>
+            <div class="stat-val" style="color:var(--accent-fire);" id="vulnStructures">148</div>
+            <div class="stat-sub">Threatened buildings in zone</div>
+          </div>
+          <div class="vuln-kpi-card">
+            <div class="stat-label">Population at Risk</div>
+            <div class="stat-val" style="color:var(--accent-ember);" id="vulnPopulation">414</div>
+            <div class="stat-sub">WUI residents in perimeter</div>
+          </div>
+          <div class="vuln-kpi-card">
+            <div class="stat-label">Evacuation Roads Cut</div>
+            <div class="stat-val" style="color:var(--accent-cyan);" id="vulnRoads">8.40 km</div>
+            <div class="stat-sub">Compromised road segments</div>
+          </div>
+          <div class="vuln-kpi-card">
+            <div class="stat-label">Power Line Hazard</div>
+            <div class="stat-val" style="color:var(--accent-purple);" id="vulnPower">5.20 km</div>
+            <div class="stat-sub">Transmission line exposure</div>
+          </div>
+        </div>
+
+        <!-- Horizon Breakdown Table -->
+        <div class="vuln-table-card">
+          <div style="font-family:var(--font-heading); font-size:14px; font-weight:600; color:var(--text-main); margin-bottom:12px;">
+            Multi-Horizon Exposure Projections
+          </div>
+          <table class="vuln-table">
+            <thead>
+              <tr>
+                <th>HORIZON</th>
+                <th>BURNED AREA</th>
+                <th>STRUCTURES</th>
+                <th>POPULATION</th>
+                <th>ROADS CUT</th>
+                <th>POWER GRID</th>
+                <th>HAZARD INDEX</th>
+                <th>SEVERITY</th>
+              </tr>
+            </thead>
+            <tbody id="vulnTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Strategic Defense Guidance -->
+        <div class="vuln-table-card" style="border-left: 3px solid var(--accent-ember);">
+          <div style="font-family:var(--font-heading); font-size:13px; font-weight:600; color:var(--accent-ember); margin-bottom:8px;">
+            🚨 Actionable Incident Command & Containment Guidance
+          </div>
+          <div id="vulnRecommendations" style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); line-height:1.6;">
+            • Prioritize structural defense along western evacuation road intersections.<br>
+            • Pre-position aerial fire retardant drops on northeast ridgeline to prevent ridge cresting.<br>
+            • Issue Level 3 Evacuation Orders for residents within the high-uncertainty perimeter boundary.
+          </div>
+        </div>
+      </div>
+
       <!-- Timeline Scrubber -->
       <div class="timeline-scrubber" id="timelineContainer">
         <div class="timeline-header">
@@ -990,10 +1270,27 @@
       activeStep: 4, // Frame 0 to 7 (4 is t0)
       isPlaying: false,
       playInterval: null,
-      currentView: 'main', // 'main', 'sync', 'channels', 'uncertainty'
+      currentView: 'main', // 'main', 'sync', 'channels', 'uncertainty', '3d', 'vuln'
       frames: [], // 8 total 128x128 arrays
       uncertaintyFrames: [],
-      dataSample: null
+      dataSample: null,
+      vulnerabilityData: null,
+      three: {
+        initialized: false,
+        scene: null,
+        camera: null,
+        renderer: null,
+        controls: null,
+        terrainMesh: null,
+        textureCanvas: null,
+        textureCtx: null,
+        texture: null,
+        particles: null,
+        showParticles: true,
+        elevationScale: 2.0,
+        wireframe: false,
+        animId: null
+      }
     };
 
     // Canvas elements
@@ -1140,6 +1437,16 @@
           document.getElementById('statUncertainty').innerText = pred.stats[2].mean_uncertainty.toFixed(4);
         }
 
+        if (pred.vulnerability) {
+          state.vulnerabilityData = pred.vulnerability;
+          renderVulnReport(pred.vulnerability);
+        }
+
+        if (state.three.initialized) {
+          updateTerrainElevations();
+          update3DTexture();
+        }
+
         // Update active view
         refreshCurrentView();
       } catch (err) {
@@ -1171,11 +1478,30 @@
         state.frames.push(makeBlob(64 + i * 2, 64 - i * 1.5, 4 + i * 1.2));
       }
       state.uncertaintyFrames = [makeBlob(64, 64, 8), makeBlob(66, 62, 10), makeBlob(68, 60, 12)];
+      state.vulnerabilityData = {
+        spatial_resolution: "30m",
+        horizons: [
+          { horizon_hours: 12, burned_area_sq_km: 1.84, exposed_structures: 42, exposed_population: 109, road_km_impacted: 2.4, power_line_km_impacted: 1.2, hazard_index: 38.5, severity_level: "MODERATE MONITORING", severity_color: "#EAB308" },
+          { horizon_hours: 24, burned_area_sq_km: 4.12, exposed_structures: 98, exposed_population: 254, road_km_impacted: 5.1, power_line_km_impacted: 3.4, hazard_index: 64.2, severity_level: "HIGH THREAT", severity_color: "#F97316" },
+          { horizon_hours: 48, burned_area_sq_km: 8.95, exposed_structures: 165, exposed_population: 429, road_km_impacted: 9.8, power_line_km_impacted: 6.2, hazard_index: 82.7, severity_level: "CRITICAL / EVACUATION PRIORITY", severity_color: "#EF4444" }
+        ],
+        critical_asset_summary: {
+          max_structures_threatened: 165,
+          max_population_threatened: 429,
+          max_road_km_cut: 9.8,
+          peak_hazard_index: 82.7
+        }
+      };
+      renderVulnReport(state.vulnerabilityData);
     }
 
     function renderActiveFrame() {
       if (!state.frames[state.activeStep]) return;
       renderArrayToCanvas(canvas, state.frames[state.activeStep], getInfernoColor);
+
+      if (state.three.initialized) {
+        update3DTexture();
+      }
 
       // Count active pixels
       let activeCount = 0;
@@ -1243,6 +1569,11 @@
         renderChannelsGrid();
       } else if (state.currentView === 'uncertainty') {
         renderUncertaintyGrid();
+      } else if (state.currentView === '3d') {
+        updateTerrainElevations();
+        update3DTexture();
+      } else if (state.currentView === 'vuln') {
+        if (state.vulnerabilityData) renderVulnReport(state.vulnerabilityData);
       }
     }
 
@@ -1287,6 +1618,247 @@
       }
     });
 
+    // ==========================================
+    // 3D Digital Twin Simulation Engine (Three.js)
+    // ==========================================
+    function initThreeScene() {
+      if (state.three.initialized) return;
+      const container = document.getElementById('threeContainer');
+      const width = container.clientWidth || 700;
+      const height = container.clientHeight || 520;
+
+      state.three.textureCanvas = document.getElementById('threeTextureCanvas');
+      state.three.textureCtx = state.three.textureCanvas.getContext('2d');
+      state.three.texture = new THREE.CanvasTexture(state.three.textureCanvas);
+      state.three.texture.generateMipmaps = false;
+      state.three.texture.minFilter = THREE.LinearFilter;
+      state.three.texture.magFilter = THREE.LinearFilter;
+
+      state.three.scene = new THREE.Scene();
+      state.three.scene.background = new THREE.Color(0x07090e);
+      state.three.scene.fog = new THREE.FogExp2(0x07090e, 0.007);
+
+      state.three.camera = new THREE.PerspectiveCamera(45, width / height, 0.5, 1000);
+      state.three.camera.position.set(0, -85, 60);
+
+      state.three.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      state.three.renderer.setSize(width, height);
+      state.three.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(state.three.renderer.domElement);
+
+      state.three.controls = new THREE.OrbitControls(state.three.camera, state.three.renderer.domElement);
+      state.three.controls.enableDamping = true;
+      state.three.controls.dampingFactor = 0.06;
+      state.three.controls.maxPolarAngle = Math.PI / 2.05;
+      state.three.controls.target.set(0, 0, 5);
+
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.65);
+      state.three.scene.add(ambLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffa726, 1.2);
+      dirLight.position.set(40, -50, 80);
+      state.three.scene.add(dirLight);
+
+      const fireGlow = new THREE.PointLight(0xff4500, 1.5, 120);
+      fireGlow.position.set(0, 0, 15);
+      state.three.scene.add(fireGlow);
+
+      const geom = new THREE.PlaneGeometry(80, 80, 127, 127);
+      const mat = new THREE.MeshStandardMaterial({
+        map: state.three.texture,
+        roughness: 0.75,
+        metalness: 0.1,
+        wireframe: false,
+        side: THREE.DoubleSide
+      });
+      state.three.terrainMesh = new THREE.Mesh(geom, mat);
+      state.three.scene.add(state.three.terrainMesh);
+
+      const grid = new THREE.GridHelper(90, 18, 0xff5722, 0x1f293d);
+      grid.rotation.x = Math.PI / 2;
+      grid.position.z = -1;
+      state.three.scene.add(grid);
+
+      createEmberParticles();
+
+      state.three.initialized = true;
+      window.addEventListener('resize', onThreeResize);
+      animateThree();
+    }
+
+    function createEmberParticles() {
+      const pCount = 800;
+      const geom = new THREE.BufferGeometry();
+      const positions = new Float32Array(pCount * 3);
+      const velocities = new Float32Array(pCount * 3);
+      const colors = new Float32Array(pCount * 3);
+
+      for (let i = 0; i < pCount; i++) {
+        positions[i * 3 + 0] = (Math.random() - 0.5) * 45;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 45;
+        positions[i * 3 + 2] = Math.random() * 25;
+
+        velocities[i * 3 + 0] = (Math.random() - 0.5) * 0.15;
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.15 + 0.1;
+        velocities[i * 3 + 2] = 0.12 + Math.random() * 0.22;
+
+        colors[i * 3 + 0] = 1.0;
+        colors[i * 3 + 1] = 0.3 + Math.random() * 0.5;
+        colors[i * 3 + 2] = 0.05;
+      }
+
+      geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      geom.userData = { velocities: velocities };
+
+      const pMat = new THREE.PointsMaterial({
+        size: 1.4,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending
+      });
+
+      state.three.particles = new THREE.Points(geom, pMat);
+      state.three.scene.add(state.three.particles);
+    }
+
+    function updateTerrainElevations() {
+      if (!state.three.terrainMesh || !state.dataSample || !state.dataSample.current_channels) return;
+      const dem = state.dataSample.current_channels.terrain;
+      const pos = state.three.terrainMesh.geometry.attributes.position;
+      const scale = state.three.elevationScale;
+
+      for (let r = 0; r < 128; r++) {
+        for (let c = 0; c < 128; c++) {
+          const idx = r * 128 + c;
+          const heightVal = (dem[r] && dem[r][c] !== undefined) ? dem[r][c] : 0.2;
+          pos.array[idx * 3 + 2] = heightVal * 16.0 * scale;
+        }
+      }
+      pos.needsUpdate = true;
+      state.three.terrainMesh.geometry.computeVertexNormals();
+    }
+
+    function update3DTexture() {
+      if (!state.three.textureCtx || !state.frames[state.activeStep]) return;
+      const tCtx = state.three.textureCtx;
+      const imgData = tCtx.createImageData(128, 128);
+      const fireArr = state.frames[state.activeStep];
+      const terrainArr = (state.dataSample && state.dataSample.current_channels) ? state.dataSample.current_channels.terrain : null;
+      const ndviArr = (state.dataSample && state.dataSample.current_channels) ? state.dataSample.current_channels.ndvi : null;
+
+      let pIdx = 0;
+      for (let r = 0; r < 128; r++) {
+        for (let c = 0; c < 128; c++) {
+          const fVal = fireArr[r] ? (fireArr[r][c] || 0) : 0;
+          const tVal = terrainArr ? (terrainArr[r][c] || 0.3) : 0.3;
+          const nVal = ndviArr ? (ndviArr[r][c] || 0.4) : 0.4;
+
+          if (fVal > 0.08) {
+            const [fr, fg, fb] = getInfernoColor(fVal);
+            imgData.data[pIdx] = fr;
+            imgData.data[pIdx + 1] = fg;
+            imgData.data[pIdx + 2] = fb;
+            imgData.data[pIdx + 3] = 255;
+          } else {
+            const baseR = Math.floor(25 + tVal * 80 + (1 - nVal) * 60);
+            const baseG = Math.floor(35 + nVal * 90 + tVal * 40);
+            const baseB = Math.floor(20 + tVal * 50);
+            imgData.data[pIdx] = baseR;
+            imgData.data[pIdx + 1] = baseG;
+            imgData.data[pIdx + 2] = baseB;
+            imgData.data[pIdx + 3] = 255;
+          }
+          pIdx += 4;
+        }
+      }
+      tCtx.putImageData(imgData, 0, 0);
+      state.three.texture.needsUpdate = true;
+    }
+
+    function animateThree() {
+      state.three.animId = requestAnimationFrame(animateThree);
+      if (state.three.controls) state.three.controls.update();
+
+      if (state.three.particles && state.three.showParticles) {
+        const pos = state.three.particles.geometry.attributes.position;
+        const vel = state.three.particles.geometry.userData.velocities;
+        for (let i = 0; i < pos.count; i++) {
+          pos.array[i * 3 + 0] += vel[i * 3 + 0];
+          pos.array[i * 3 + 1] += vel[i * 3 + 1];
+          pos.array[i * 3 + 2] += vel[i * 3 + 2];
+
+          if (pos.array[i * 3 + 2] > 32) {
+            pos.array[i * 3 + 0] = (Math.random() - 0.5) * 45;
+            pos.array[i * 3 + 1] = (Math.random() - 0.5) * 45;
+            pos.array[i * 3 + 2] = 0.5 + Math.random() * 2;
+          }
+        }
+        pos.needsUpdate = true;
+      }
+
+      if (state.three.renderer && state.three.scene && state.three.camera) {
+        state.three.renderer.render(state.three.scene, state.three.camera);
+      }
+    }
+
+    function onThreeResize() {
+      if (!state.three.initialized) return;
+      const container = document.getElementById('threeContainer');
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      if (w > 0 && h > 0) {
+        state.three.camera.aspect = w / h;
+        state.three.camera.updateProjectionMatrix();
+        state.three.renderer.setSize(w, h);
+      }
+    }
+
+    // ==========================================
+    // Infrastructure Vulnerability & Exposure UI
+    // ==========================================
+    function renderVulnReport(vuln) {
+      if (!vuln) return;
+      const horizons = vuln.horizons || [];
+      const peakRep = horizons[2] || horizons[0] || {};
+      const summary = vuln.critical_asset_summary || {};
+
+      const hazardScore = peakRep.hazard_index !== undefined ? peakRep.hazard_index : (summary.peak_hazard_index || 74.2);
+      const sevLevel = peakRep.severity_level || 'HIGH THREAT';
+      const sevColor = peakRep.severity_color || '#F97316';
+
+      document.getElementById('vulnHazardScore').innerText = hazardScore.toFixed(1);
+      document.getElementById('vulnHazardScore').style.color = sevColor;
+      
+      const badge = document.getElementById('vulnSeverityBadge');
+      badge.innerText = sevLevel;
+      badge.style.borderColor = sevColor;
+      badge.style.color = sevColor;
+
+      document.getElementById('vulnStructures').innerText = (summary.max_structures_threatened || peakRep.exposed_structures || 0).toLocaleString();
+      document.getElementById('vulnPopulation').innerText = (summary.max_population_threatened || peakRep.exposed_population || 0).toLocaleString();
+      document.getElementById('vulnRoads').innerText = (summary.max_road_km_cut || peakRep.road_km_impacted || 0).toFixed(2) + ' km';
+      document.getElementById('vulnPower').innerText = (peakRep.power_line_km_impacted || 0).toFixed(2) + ' km';
+
+      const tbody = document.getElementById('vulnTableBody');
+      tbody.innerHTML = '';
+      horizons.forEach(h => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:700; color:var(--accent-ember);">+${h.horizon_hours} Hours</td>
+          <td>${h.burned_area_sq_km.toFixed(2)} km²</td>
+          <td style="color:var(--accent-fire); font-weight:600;">${h.exposed_structures}</td>
+          <td>${h.exposed_population}</td>
+          <td style="color:var(--accent-cyan);">${h.road_km_impacted.toFixed(2)} km</td>
+          <td>${h.power_line_km_impacted.toFixed(2)} km</td>
+          <td style="font-weight:700; color:${h.severity_color};">${h.hazard_index.toFixed(1)} / 100</td>
+          <td><span class="rec-badge" style="background:${h.severity_color}22; color:${h.severity_color}; border:1px solid ${h.severity_color};">${h.severity_level}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
     // Tab Switching Handlers
     function switchView(viewName) {
       state.currentView = viewName;
@@ -1296,6 +1868,8 @@
       document.getElementById('viewportSync').style.display = 'none';
       document.getElementById('viewportChannels').style.display = 'none';
       document.getElementById('viewportUncertainty').style.display = 'none';
+      document.getElementById('viewport3D').style.display = 'none';
+      document.getElementById('viewportVuln').style.display = 'none';
       document.getElementById('timelineContainer').style.display = 'flex';
 
       // Remove active from all tabs
@@ -1317,6 +1891,19 @@
         document.getElementById('tabUncertainty').classList.add('active');
         document.getElementById('viewportUncertainty').style.display = 'grid';
         renderUncertaintyGrid();
+      } else if (viewName === '3d') {
+        document.getElementById('tab3D').classList.add('active');
+        document.getElementById('viewport3D').style.display = 'block';
+        initThreeScene();
+        setTimeout(onThreeResize, 50);
+        updateTerrainElevations();
+        update3DTexture();
+      } else if (viewName === 'vuln') {
+        document.getElementById('tabVuln').classList.add('active');
+        document.getElementById('viewportVuln').style.display = 'flex';
+        if (state.vulnerabilityData) {
+          renderVulnReport(state.vulnerabilityData);
+        }
       }
     }
 
@@ -1324,6 +1911,48 @@
     document.getElementById('tabSync').addEventListener('click', () => switchView('sync'));
     document.getElementById('tabChannels').addEventListener('click', () => switchView('channels'));
     document.getElementById('tabUncertainty').addEventListener('click', () => switchView('uncertainty'));
+    document.getElementById('tab3D').addEventListener('click', () => switchView('3d'));
+    document.getElementById('tabVuln').addEventListener('click', () => switchView('vuln'));
+
+    // 3D Controls
+    document.getElementById('btn3DModeTerrain').addEventListener('click', () => {
+      if (state.three.terrainMesh) state.three.terrainMesh.material.wireframe = false;
+      document.getElementById('btn3DModeTerrain').classList.add('active');
+      document.getElementById('btn3DModeWireframe').classList.remove('active');
+    });
+
+    document.getElementById('btn3DModeWireframe').addEventListener('click', () => {
+      if (state.three.terrainMesh) state.three.terrainMesh.material.wireframe = true;
+      document.getElementById('btn3DModeWireframe').classList.add('active');
+      document.getElementById('btn3DModeTerrain').classList.remove('active');
+    });
+
+    document.getElementById('btn3DParticles').addEventListener('click', () => {
+      state.three.showParticles = !state.three.showParticles;
+      if (state.three.particles) state.three.particles.visible = state.three.showParticles;
+      document.getElementById('btn3DParticles').classList.toggle('active', state.three.showParticles);
+      document.getElementById('btn3DParticles').innerText = state.three.showParticles ? 'Smoke & Embers: ON' : 'Smoke & Embers: OFF';
+    });
+
+    document.getElementById('btn3DResetCam').addEventListener('click', () => {
+      if (state.three.camera && state.three.controls) {
+        state.three.camera.position.set(0, -85, 60);
+        state.three.controls.target.set(0, 0, 5);
+        state.three.controls.update();
+      }
+    });
+
+    function setElevationMultiplier(scale, btnId) {
+      state.three.elevationScale = scale;
+      ['btn3DElev1x', 'btn3DElev2x', 'btn3DElev4x'].forEach(id => {
+        document.getElementById(id).classList.toggle('active', id === btnId);
+      });
+      updateTerrainElevations();
+    }
+
+    document.getElementById('btn3DElev1x').addEventListener('click', () => setElevationMultiplier(1.0, 'btn3DElev1x'));
+    document.getElementById('btn3DElev2x').addEventListener('click', () => setElevationMultiplier(2.0, 'btn3DElev2x'));
+    document.getElementById('btn3DElev4x').addEventListener('click', () => setElevationMultiplier(4.0, 'btn3DElev4x'));
 
     // Sliders live text
     document.getElementById('sliderWindSpeed').addEventListener('input', (e) => {
