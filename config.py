@@ -118,6 +118,7 @@ class FirecastConfig:
     processed_dir: Path = PROCESSED_DATA_DIR
     synthetic_dir: Path = SYNTHETIC_DATA_DIR
     checkpoint_dir: Path = CHECKPOINT_DIR
+    dataset_path: Path = PROCESSED_DATA_DIR / "real_wildfire_dataset.npz"
     
     def ensure_directories(self) -> None:
         """Create required project directories if they do not exist."""

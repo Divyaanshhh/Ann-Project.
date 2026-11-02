@@ -104,22 +104,18 @@ def get_metrics():
 
 
 @app.get("/api/dataset/sample")
-def get_dataset_sample(source: str = "synthetic"):
-    """Returns a full 6-channel spatiotemporal observation sequence and target."""
-    if source == "firms":
-        adapter = RealWildfireAdapter()
-        df = adapter.fetch_or_load_real_firms_data()
-        inputs, targets = adapter.rasterize_firms_cluster(df)
-        label = "NASA FIRMS Satellite Active Fire (Real MODIS/VIIRS)"
-    else:
-        npz_path = CONFIG.synthetic_dir / "synthetic_wildfire_dataset.npz"
-        if not npz_path.exists():
-            gen = SyntheticWildfireGenerator(num_samples=CONFIG.data.num_synthetic_samples)
-            gen.save_dataset(npz_path)
-        data = np.load(npz_path)
-        inputs = data["inputs"][0]
-        targets = data["targets"][0]
-        label = "Synthetic Wildfire Benchmark (128x128)"
+def get_dataset_sample(source: str = "real"):
+    """Returns a full 6-channel spatiotemporal observation sequence and target from real NASA satellite data."""
+    dataset_file = CONFIG.dataset_path
+    if not dataset_file.exists():
+        from datasets.real_dataset_builder import RealWildfireDatasetBuilder
+        builder = RealWildfireDatasetBuilder(num_sequences=120)
+        builder.build_and_save(dataset_file)
+
+    data = np.load(dataset_file)
+    inputs = data["inputs"][0]
+    targets = data["targets"][0]
+    label = "Real NASA FIRMS Satellite Active Fire Dataset (MODIS C6.1 / VIIRS)"
 
     # Subsample or return rasters as nested lists
     # inputs: (5, 6, 128, 128), targets: (3, 1, 128, 128)
@@ -171,9 +167,8 @@ def run_prediction(params: Optional[SimulationParams] = None):
 
         input_arr = np.stack(history, axis=0) # (5, 6, 128, 128)
     else:
-        # Default sample
-        npz_path = CONFIG.synthetic_dir / "synthetic_wildfire_dataset.npz"
-        data = np.load(npz_path)
+        # Default real dataset sample
+        data = np.load(CONFIG.dataset_path)
         input_arr = data["inputs"][0]
 
     # Run inference on GPU
@@ -234,3 +229,4 @@ def serve_index():
     if not index_file.exists():
         raise HTTPException(status_code=404, detail="Frontend index.html not found.")
     return FileResponse(index_file)
+

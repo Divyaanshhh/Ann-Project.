@@ -84,22 +84,18 @@ def load_inference_engine():
 
 
 @st.cache_data
-def load_sample_data(use_real_firms: bool = False):
-    """Loads either real NASA FIRMS active fire raster or synthetic multi-modal sample."""
-    if use_real_firms:
-        adapter = RealWildfireAdapter()
-        df = adapter.fetch_or_load_real_firms_data()
-        x, y = adapter.rasterize_firms_cluster(df)
-        return x, y, "Real NASA FIRMS Satellite Observations (MODIS / VIIRS)"
-    else:
-        npz_path = CONFIG.synthetic_dir / "synthetic_wildfire_dataset.npz"
-        if not npz_path.exists():
-            gen = SyntheticWildfireGenerator(num_samples=CONFIG.data.num_synthetic_samples)
-            gen.save_dataset(npz_path)
-        data = np.load(npz_path)
-        inputs = data["inputs"]
-        targets = data["targets"]
-        return inputs[0], targets[0], "Synthetic Benchmark Spatiotemporal Dataset (100 Samples)"
+def load_sample_data(use_real_firms: bool = True):
+    """Loads spatiotemporal sequence directly from real NASA FIRMS satellite observations."""
+    dataset_file = CONFIG.dataset_path
+    if not dataset_file.exists():
+        from datasets.real_dataset_builder import RealWildfireDatasetBuilder
+        builder = RealWildfireDatasetBuilder(num_sequences=120)
+        builder.build_and_save(dataset_file)
+
+    data = np.load(dataset_file)
+    inputs = data["inputs"]
+    targets = data["targets"]
+    return inputs[0], targets[0], "Real NASA FIRMS Satellite Active Fire Dataset (MODIS C6.1 / VIIRS)"
 
 
 def main():

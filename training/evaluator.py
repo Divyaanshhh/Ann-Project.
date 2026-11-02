@@ -97,7 +97,7 @@ def main():
     parser.add_argument("--checkpoint", type=str, default=str(CONFIG.checkpoint_dir / "best_model.pt"))
     args = parser.parse_args()
 
-    dataset_file = CONFIG.synthetic_dir / "synthetic_wildfire_dataset.npz"
+    dataset_file = CONFIG.dataset_path
     _, _, test_loader, _ = create_dataloaders(dataset_path=dataset_file)
 
     evaluator = FirecastEvaluator(checkpoint_path=args.checkpoint)

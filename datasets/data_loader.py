@@ -101,7 +101,11 @@ def create_dataloaders(
     """
     if inputs is None or targets is None:
         if dataset_path is None:
-            dataset_path = CONFIG.synthetic_dir / "synthetic_wildfire_dataset.npz"
+            dataset_path = CONFIG.dataset_path
+            if not Path(dataset_path).exists():
+                from datasets.real_dataset_builder import RealWildfireDatasetBuilder
+                builder = RealWildfireDatasetBuilder(num_sequences=120)
+                builder.build_and_save(dataset_path)
         inputs, targets = load_dataset_from_npz(dataset_path)
 
     total_samples = len(inputs)

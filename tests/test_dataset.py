@@ -12,17 +12,19 @@ from datasets.real_wildfire_adapter import RealWildfireAdapter
 from utils.validation import validate_input_tensor, validate_target_tensor
 
 
-def test_synthetic_generator_dimensions():
-    """Verify generator produces exact (N, 5, 6, 128, 128) inputs and (N, 3, 1, 128, 128) targets."""
-    gen = SyntheticWildfireGenerator(num_samples=4, height=128, width=128, seed=99)
-    x, y = gen.generate_dataset()
-
-    assert x.shape == (4, 5, 6, 128, 128), f"Unexpected input shape: {x.shape}"
-    assert y.shape == (4, 3, 1, 128, 128), f"Unexpected target shape: {y.shape}"
-    assert x.dtype == np.float32
-    assert y.dtype == np.float32
-    validate_input_tensor(x)
-    validate_target_tensor(y)
+def test_real_dataset_loading():
+    """Verify loading real NASA FIRMS active fire spatiotemporal dataset from disk."""
+    train_loader, val_loader, test_loader, meta = create_dataloaders(
+        dataset_path=CONFIG.dataset_path,
+        batch_size=4
+    )
+    assert meta["total_samples"] >= 100
+    assert meta["input_shape"][1:] == [5, 6, 128, 128]
+    assert meta["target_shape"][1:] == [3, 1, 128, 128]
+    for x, y in train_loader:
+        assert x.shape == (4, 5, 6, 128, 128)
+        assert y.shape == (4, 3, 1, 128, 128)
+        break
 
 
 def test_normalizer_bounds():

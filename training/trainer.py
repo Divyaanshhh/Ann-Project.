@@ -252,12 +252,12 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(CONFIG.data.seed)
 
-    # Ensure synthetic dataset is generated
-    dataset_file = CONFIG.synthetic_dir / "synthetic_wildfire_dataset.npz"
+    # Ensure real NASA FIRMS dataset is prepared
+    dataset_file = CONFIG.dataset_path
     if not dataset_file.exists():
-        from datasets.synthetic_generator import SyntheticWildfireGenerator
-        gen = SyntheticWildfireGenerator()
-        gen.save_dataset(dataset_file)
+        from datasets.real_dataset_builder import RealWildfireDatasetBuilder
+        builder = RealWildfireDatasetBuilder(num_sequences=120)
+        builder.build_and_save(dataset_file)
 
     train_loader, val_loader, _, _ = create_dataloaders(
         dataset_path=dataset_file,
