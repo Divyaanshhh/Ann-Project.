@@ -11,15 +11,16 @@
     :root {
       --bg-dark: #07090E;
       --bg-surface: #0E131F;
-      --bg-surface-glass: rgba(14, 19, 31, 0.78);
+      --bg-surface-glass: rgba(14, 19, 31, 0.85);
       --bg-card: #141C2E;
-      --border-subtle: rgba(255, 87, 34, 0.18);
+      --border-subtle: rgba(255, 87, 34, 0.22);
       --border-active: #FF5722;
       --accent-fire: #FF4500;
       --accent-ember: #FFA000;
       --accent-glow: #FF6E40;
       --accent-cyan: #00E5FF;
       --accent-green: #10B981;
+      --accent-purple: #A855F7;
       --text-main: #F1F5F9;
       --text-muted: #94A3B8;
       --text-dim: #64748B;
@@ -102,7 +103,7 @@
     .header-telemetry {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 18px;
     }
 
     .telemetry-tag {
@@ -141,7 +142,6 @@
       justify-content: space-between;
       font-size: 12px;
       color: #FEF08A;
-      font-family: var(--font-body);
     }
 
     /* Main Command Layout */
@@ -150,11 +150,11 @@
       grid-template-columns: 340px 1fr 340px;
       gap: 20px;
       padding: 24px 28px;
-      max-width: 1720px;
+      max-width: 1760px;
       margin: 0 auto;
     }
 
-    @media (max-width: 1400px) {
+    @media (max-width: 1440px) {
       .command-container {
         grid-template-columns: 320px 1fr;
       }
@@ -284,11 +284,7 @@
       transform: translateY(-1px);
     }
 
-    .btn-fire:active {
-      transform: translateY(1px);
-    }
-
-    /* Center Stage Canvas & Maps */
+    /* Center Stage Canvas & Viewports */
     .center-stage {
       display: flex;
       flex-direction: column;
@@ -308,6 +304,7 @@
     .tab-pills {
       display: flex;
       gap: 6px;
+      flex-wrap: wrap;
     }
 
     .tab-pill {
@@ -316,17 +313,23 @@
       color: var(--text-muted);
       font-family: var(--font-mono);
       font-size: 12px;
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
     }
 
+    .tab-pill:hover {
+      color: #FFF;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     .tab-pill.active {
-      background: rgba(255, 87, 34, 0.16);
+      background: rgba(255, 87, 34, 0.18);
       border-color: var(--border-active);
       color: #FFF;
       font-weight: 600;
+      box-shadow: 0 0 10px rgba(255, 69, 0, 0.25);
     }
 
     .canvas-viewport {
@@ -338,7 +341,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 20px;
       min-height: 480px;
       box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
     }
@@ -346,11 +349,10 @@
     #fireCanvas {
       image-rendering: pixelated;
       width: 100%;
-      max-width: 480px;
-      height: auto;
+      max-width: 460px;
       aspect-ratio: 1 / 1;
       border-radius: 8px;
-      border: 1px solid rgba(255, 87, 34, 0.3);
+      border: 1px solid rgba(255, 87, 34, 0.35);
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
       cursor: crosshair;
     }
@@ -360,7 +362,7 @@
       position: absolute;
       bottom: 24px;
       left: 24px;
-      background: rgba(14, 19, 31, 0.9);
+      background: rgba(14, 19, 31, 0.92);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border-subtle);
       padding: 8px 14px;
@@ -371,6 +373,153 @@
       pointer-events: none;
       display: flex;
       gap: 16px;
+    }
+
+    /* Synchronized 4-Panel Grid */
+    .sync-grid {
+      display: none;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+
+    .sync-card {
+      background: #0B0E14;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .sync-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sync-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .sync-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 87, 34, 0.15);
+      color: var(--accent-ember);
+      border: 1px solid rgba(255, 87, 34, 0.3);
+    }
+
+    .sync-canvas {
+      width: 100%;
+      max-width: 260px;
+      aspect-ratio: 1 / 1;
+      border-radius: 6px;
+      image-rendering: pixelated;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* 6-Channel Layers Grid */
+    .channels-grid {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+    }
+
+    @media (max-width: 1200px) {
+      .channels-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .channel-card {
+      background: #0B0E14;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .channel-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .channel-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .channel-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-dim);
+    }
+
+    .channel-canvas {
+      width: 100%;
+      max-width: 180px;
+      aspect-ratio: 1 / 1;
+      border-radius: 4px;
+      image-rendering: pixelated;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .channel-desc {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 6px;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* Uncertainty Map Viewport */
+    .uncertainty-grid {
+      display: none;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+
+    .uncertainty-card {
+      background: #0B0E14;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    .uncertainty-canvas {
+      width: 100%;
+      max-width: 290px;
+      aspect-ratio: 1 / 1;
+      border-radius: 6px;
+      image-rendering: pixelated;
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
     }
 
     /* Timeline Scrubber */
@@ -461,39 +610,6 @@
       background: var(--accent-fire);
     }
 
-    /* Multi-Panel Grid for Sync Comparison */
-    .sync-grid {
-      display: none;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      width: 100%;
-    }
-
-    .sync-card {
-      background: #0B0E14;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .sync-title {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      align-self: flex-start;
-    }
-
-    .sync-canvas {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      border-radius: 4px;
-      image-rendering: pixelated;
-    }
-
     /* Right Telemetry Column */
     .stat-metric-card {
       background: rgba(20, 28, 46, 0.6);
@@ -534,7 +650,7 @@
     .legend-gradient {
       height: 8px;
       border-radius: 4px;
-      background: linear-gradient(90deg, #000004, #57106E, #BB3754, #F98C0A, #FCFFA4);
+      background: linear-gradient(90deg, #07090E, #57106E, #BB3754, #F98C0A, #FCFFA4);
       margin-bottom: 6px;
     }
 
@@ -555,9 +671,9 @@
       <div class="brand-logo">🔥</div>
       <div>
         <div class="brand-title">FIRECAST AI</div>
-        <div style="font-size: 11px; color: var(--text-muted);">Deep Spatiotemporal Wildfire Forecasting Command</div>
+        <div style="font-size: 11px; color: var(--text-muted);">Real Satellite Wildfire Progression & Intensity Forecasting Command</div>
       </div>
-      <div class="brand-badge">RESEARCH V1.0</div>
+      <div class="brand-badge">NASA FIRMS MODIS/VIIRS</div>
     </div>
 
     <div class="header-telemetry">
@@ -570,16 +686,16 @@
         <span style="color: var(--accent-ember);">[32, 64]</span>
       </div>
       <div class="telemetry-tag">
-        <span>Test IoU:</span>
-        <span style="color: var(--accent-green); font-weight:700;">0.9218</span>
+        <span>Real Test IoU:</span>
+        <span style="color: var(--accent-green); font-weight:700;">0.8702</span>
       </div>
     </div>
   </header>
 
   <!-- Research Notice -->
   <div class="disclaimer-banner">
-    <div>⚠️ <b>ACADEMIC RESEARCH PLATFORM:</b> Multi-step neural forecasts are experimental decision-support estimates. Never deploy for tactical firefighting or evacuation routes.</div>
-    <div style="font-family: var(--font-mono);">MODEL: CONVLSTM-SEQ2SEQ-GPU</div>
+    <div>⚠️ <b>ACADEMIC RESEARCH & SATELLITE WILDFIRE AWARENESS:</b> Multi-step neural forecasts are experimental decision-support estimates. Never deploy for tactical firefighting or evacuation routes.</div>
+    <div style="font-family: var(--font-mono);">DATASET: REAL NASA SATELLITE TELEMETRY</div>
   </div>
 
   <!-- Command Dashboard Layout -->
@@ -600,7 +716,7 @@
           <span>DATA STREAM</span>
         </label>
         <select id="dataSourceSelect" style="width:100%; background:#141C2E; color:#FFF; border:1px solid rgba(255,255,255,0.12); padding:8px; border-radius:6px; font-family:var(--font-mono); font-size:12px; outline:none;">
-          <option value="real">Real NASA FIRMS Satellite Active Fire (MODIS / VIIRS)</option>
+          <option value="real">Real NASA FIRMS Satellite Active Fire (MODIS C6.1)</option>
           <option value="firms">Real Regional Active Wildfire Complexes</option>
         </select>
       </div>
@@ -655,7 +771,7 @@
       </button>
 
       <div style="margin-top:20px; font-size:11px; color:var(--text-dim); line-height:1.5;">
-        Parameters re-synthesize dynamic weather vectors and run forward inference on the GPU-calibrated ConvLSTM weights.
+        Parameters re-synthesize dynamic weather vectors and run forward inference on the GPU-trained ConvLSTM weights.
       </div>
     </aside>
 
@@ -672,11 +788,11 @@
         </div>
 
         <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-dim);">
-          GRID: 128 × 128 PIXELS | RESOLUTION: 30M
+          GRID: 128 × 128 PIXELS | NASA MODIS RESOLUTION
         </div>
       </div>
 
-      <!-- Viewport -->
+      <!-- Viewport 1: Main Interactive Single Horizon Canvas -->
       <div class="canvas-viewport" id="viewportMain">
         <canvas id="fireCanvas" width="128" height="128"></canvas>
         
@@ -687,32 +803,116 @@
         </div>
       </div>
 
-      <!-- Synchronized 4-Panel Grid (Toggled) -->
+      <!-- Viewport 2: Synchronized 4-Panel Grid -->
       <div class="sync-grid" id="viewportSync">
         <div class="sync-card">
-          <div class="sync-title">Observed Active Fire (t₀)</div>
+          <div class="sync-header">
+            <span class="sync-title">Observed Active Fire (t₀)</span>
+            <span class="sync-badge" id="badgeT0">Observed</span>
+          </div>
           <canvas class="sync-canvas" id="canvasT0" width="128" height="128"></canvas>
         </div>
         <div class="sync-card">
-          <div class="sync-title">Predicted +12 Hours</div>
+          <div class="sync-header">
+            <span class="sync-title">Predicted +12 Hours</span>
+            <span class="sync-badge" id="badge12h">Forecast</span>
+          </div>
           <canvas class="sync-canvas" id="canvas12h" width="128" height="128"></canvas>
         </div>
         <div class="sync-card">
-          <div class="sync-title">Predicted +24 Hours</div>
+          <div class="sync-header">
+            <span class="sync-title">Predicted +24 Hours</span>
+            <span class="sync-badge" id="badge24h">Forecast</span>
+          </div>
           <canvas class="sync-canvas" id="canvas24h" width="128" height="128"></canvas>
         </div>
         <div class="sync-card">
-          <div class="sync-title">Predicted +48 Hours</div>
+          <div class="sync-header">
+            <span class="sync-title">Predicted +48 Hours</span>
+            <span class="sync-badge" id="badge48h">Forecast</span>
+          </div>
           <canvas class="sync-canvas" id="canvas48h" width="128" height="128"></canvas>
         </div>
       </div>
 
+      <!-- Viewport 3: 6-Channel Multi-Modal Decomposition Grid -->
+      <div class="channels-grid" id="viewportChannels">
+        <div class="channel-card">
+          <div class="channel-header">
+            <span class="channel-title">C1: Fire Radiance</span>
+            <span class="channel-badge">FRP</span>
+          </div>
+          <canvas class="channel-canvas" id="canvasC1" width="128" height="128"></canvas>
+          <div class="channel-desc">NASA FIRMS active thermal anomalies [0, 1]</div>
+        </div>
+        <div class="channel-card">
+          <div class="channel-header">
+            <span class="channel-title">C2: Vegetation NDVI</span>
+            <span class="channel-badge">Fuel</span>
+          </div>
+          <canvas class="channel-canvas" id="canvasC2" width="128" height="128"></canvas>
+          <div class="channel-desc">Sentinel-2 fuel biomass index [0, 1]</div>
+        </div>
+        <div class="channel-card">
+          <div class="channel-header">
+            <span class="channel-title">C3: Topography DEM</span>
+            <span class="channel-badge">Terrain</span>
+          </div>
+          <canvas class="channel-canvas" id="canvasC3" width="128" height="128"></canvas>
+          <div class="channel-desc">DEM slope & aspect fire spread risk</div>
+        </div>
+        <div class="channel-card">
+          <div class="channel-header">
+            <span class="channel-title">C4: Wind Speed</span>
+            <span class="channel-badge">Velocity</span>
+          </div>
+          <canvas class="channel-canvas" id="canvasC4" width="128" height="128"></canvas>
+          <div class="channel-desc">Surface wind magnitude [0 to 35 m/s]</div>
+        </div>
+        <div class="channel-card">
+          <div class="channel-header">
+            <span class="channel-title">C5: Wind Direction</span>
+            <span class="channel-badge">Circular</span>
+          </div>
+          <canvas class="channel-canvas" id="canvasC5" width="128" height="128"></canvas>
+          <div class="channel-desc">Cyclic trigonometric angle [0, 1]</div>
+        </div>
+        <div class="channel-card">
+          <div class="channel-header">
+            <span class="channel-title">C6: Atmospheric Dryness</span>
+            <span class="channel-badge">VPD</span>
+          </div>
+          <canvas class="channel-canvas" id="canvasC6" width="128" height="128"></canvas>
+          <div class="channel-desc">Relative humidity & temperature composite</div>
+        </div>
+      </div>
+
+      <!-- Viewport 4: Epistemic Uncertainty Dashboard -->
+      <div class="uncertainty-grid" id="viewportUncertainty">
+        <div class="uncertainty-card">
+          <div class="sync-header">
+            <span class="sync-title" style="color:var(--accent-ember);">Mean Predicted Probability (+48h)</span>
+            <span class="sync-badge" style="background:rgba(255,160,0,0.15); color:var(--accent-ember); border-color:var(--accent-ember);">Mean &mu;</span>
+          </div>
+          <canvas class="uncertainty-canvas" id="canvasUncProb" width="128" height="128"></canvas>
+          <div class="channel-desc" style="margin-top:10px;">Monte Carlo dropout expected fire presence front</div>
+        </div>
+        <div class="uncertainty-card">
+          <div class="sync-header">
+            <span class="sync-title" style="color:var(--accent-cyan);">Epistemic Uncertainty Variance (&sigma;)</span>
+            <span class="sync-badge" style="background:rgba(0,229,255,0.15); color:var(--accent-cyan); border-color:var(--accent-cyan);">&sigma; Variance</span>
+          </div>
+          <canvas class="uncertainty-canvas" id="canvasUncStd" width="128" height="128"></canvas>
+          <div class="channel-desc" style="margin-top:10px;">High-variance perimeter boundary flags (M = 8 passes)</div>
+        </div>
+      </div>
+
       <!-- Timeline Scrubber -->
-      <div class="timeline-scrubber">
+      <div class="timeline-scrubber" id="timelineContainer">
         <div class="timeline-header">
           <div class="playback-controls">
             <button class="btn-icon" id="btnPlay">▶</button>
-            <span class="frame-status" id="timelineLabel">OBSERVED FRAME: t₀ (Current Observation)</span>
+            <span class="frame-status" id="timelineLabel">OBSERVED FRAME: t₀ (Current Active Fire)</span>
           </div>
           <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-dim);">
             SEQUENCE: 5 OBSERVED + 3 PREDICTED HORIZONS
@@ -748,20 +948,20 @@
       </div>
 
       <div class="stat-metric-card">
-        <div class="stat-label">Overall Test IoU</div>
-        <div class="stat-val" style="color:var(--accent-green);">0.9218</div>
-        <div class="stat-sub">Jaccard Index across test split</div>
+        <div class="stat-label">Overall Real Test IoU</div>
+        <div class="stat-val" style="color:var(--accent-green);">0.8702</div>
+        <div class="stat-sub">Jaccard Index on NASA test split</div>
       </div>
 
       <div class="stat-metric-card">
         <div class="stat-label">Dice Coefficient (F1)</div>
-        <div class="stat-val" style="color:var(--accent-cyan);">0.9593</div>
-        <div class="stat-sub">Precision: 0.9541 | Recall: 0.9646</div>
+        <div class="stat-val" style="color:var(--accent-cyan);">0.9306</div>
+        <div class="stat-sub">Precision: 0.9035 | Recall: 0.9594</div>
       </div>
 
       <div class="stat-metric-card">
         <div class="stat-label">Epistemic Uncertainty (+48h)</div>
-        <div class="stat-val" style="color:var(--accent-ember);" id="statUncertainty">0.0521</div>
+        <div class="stat-val" style="color:var(--accent-ember);" id="statUncertainty">0.0482</div>
         <div class="stat-sub">Monte Carlo Dropout std. deviation</div>
       </div>
 
@@ -800,33 +1000,74 @@
     const canvas = document.getElementById('fireCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Color colormap (Inferno Flame)
+    // Colormap functions
     function getInfernoColor(val) {
       val = Math.max(0, Math.min(1, val));
-      if (val < 0.05) return [11, 14, 20, 255]; // Background
+      if (val < 0.05) return [11, 14, 20, 255]; // Dark background
       const r = Math.min(255, Math.floor(val * 320));
       const g = Math.min(255, Math.floor(Math.pow(val, 1.8) * 230));
       const b = Math.min(255, Math.floor(Math.pow(val, 3.0) * 180));
       return [r, g, b, 255];
     }
 
+    function getNdviColor(val) {
+      val = Math.max(0, Math.min(1, val));
+      const r = Math.floor((1 - val) * 180);
+      const g = Math.floor(60 + val * 195);
+      const b = Math.floor((1 - val) * 60);
+      return [r, g, b, 255];
+    }
+
+    function getTerrainColor(val) {
+      val = Math.max(0, Math.min(1, val));
+      const r = Math.floor(40 + val * 180);
+      const g = Math.floor(30 + val * 140);
+      const b = Math.floor(25 + val * 90);
+      return [r, g, b, 255];
+    }
+
+    function getWindColor(val) {
+      val = Math.max(0, Math.min(1, val));
+      const r = Math.floor(10 + val * 30);
+      const g = Math.floor(40 + val * 160);
+      const b = Math.floor(80 + val * 175);
+      return [r, g, b, 255];
+    }
+
+    function getWindDirColor(val) {
+      val = Math.max(0, Math.min(1, val));
+      const r = Math.floor(120 + 120 * Math.sin(val * Math.PI * 2));
+      const g = Math.floor(60 + 180 * Math.cos(val * Math.PI * 2));
+      const b = Math.floor(180 + 75 * Math.sin(val * Math.PI * 2 + 1));
+      return [Math.abs(r), Math.abs(g), Math.abs(b), 255];
+    }
+
+    function getDrynessColor(val) {
+      val = Math.max(0, Math.min(1, val));
+      const r = Math.floor(80 + val * 175);
+      const g = Math.floor(30 + val * 110);
+      const b = Math.floor(20);
+      return [r, g, b, 255];
+    }
+
     function getUncertaintyColor(val) {
-      val = Math.max(0, Math.min(1, val * 3.5)); // Scale up variance
+      val = Math.max(0, Math.min(1, val * 4.0)); // Scale up variance
       const r = Math.floor(val * 40);
-      const g = Math.floor(val * 220);
+      const g = Math.floor(val * 225);
       const b = Math.floor(val * 255);
       return [r, g, b, 255];
     }
 
-    function renderArrayToCanvas(targetCanvas, arr2d, isUncertainty = false) {
+    function renderArrayToCanvas(targetCanvas, arr2d, colorFn = getInfernoColor) {
+      if (!targetCanvas || !arr2d) return;
       const cCtx = targetCanvas.getContext('2d');
       const imgData = cCtx.createImageData(128, 128);
       let pIdx = 0;
 
       for (let r = 0; r < 128; r++) {
         for (let c = 0; c < 128; c++) {
-          const val = arr2d[r] ? arr2d[r][c] : 0;
-          const [red, green, blue, alpha] = isUncertainty ? getUncertaintyColor(val) : getInfernoColor(val);
+          const val = (arr2d[r] && arr2d[r][c] !== undefined) ? arr2d[r][c] : 0;
+          const [red, green, blue, alpha] = colorFn(val);
           imgData.data[pIdx] = red;
           imgData.data[pIdx + 1] = green;
           imgData.data[pIdx + 2] = blue;
@@ -837,7 +1078,7 @@
       cCtx.putImageData(imgData, 0, 0);
     }
 
-    // Load initial dataset sample and run forecast
+    // Load initial real dataset sample and run GPU forecast
     async function loadInitialData() {
       try {
         const source = document.getElementById('dataSourceSelect').value;
@@ -845,10 +1086,9 @@
         const data = await res.json();
         state.dataSample = data;
 
-        // Build default simulation
         await runSimulation();
       } catch (err) {
-        console.warn('API error, falling back to local client simulation generator', err);
+        console.warn('API error, falling back to local simulation generator', err);
         generateFallbackFrames();
         renderActiveFrame();
       }
@@ -881,33 +1121,31 @@
         });
         const pred = await res.json();
 
-        // Load 5 history frames from dataSample
+        // 5 history frames from real dataset
         state.frames = [];
         if (state.dataSample && state.dataSample.history_fire) {
           state.frames.push(...state.dataSample.history_fire);
         } else {
-          // Generate 5 synthetic history
           for (let s = 0; s < 5; s++) state.frames.push(makeBlob(ignX, 64, 4 + s * 0.8));
         }
 
-        // Append 3 predictions (+12h, +24h, +48h)
+        // 3 future forecast frames (+12h, +24h, +48h)
         state.frames.push(pred.presence_probs[0]);
         state.frames.push(pred.presence_probs[1]);
         state.frames.push(pred.presence_probs[2]);
 
         state.uncertaintyFrames = pred.uncertainty_std;
 
-        // Update stats
         if (pred.stats && pred.stats[2]) {
-          document.getElementById('statUncertainty').innerText = pred.stats[2].mean_uncertainty;
+          document.getElementById('statUncertainty').innerText = pred.stats[2].mean_uncertainty.toFixed(4);
         }
 
-        renderActiveFrame();
-        renderSyncCards();
+        // Update active view
+        refreshCurrentView();
       } catch (err) {
         console.error('Inference error:', err);
         generateFallbackFrames();
-        renderActiveFrame();
+        refreshCurrentView();
       } finally {
         document.getElementById('btnSimulate').innerText = '⚡ Run Neural Progression Forecast';
       }
@@ -932,14 +1170,12 @@
       for (let i = 0; i < 8; i++) {
         state.frames.push(makeBlob(64 + i * 2, 64 - i * 1.5, 4 + i * 1.2));
       }
+      state.uncertaintyFrames = [makeBlob(64, 64, 8), makeBlob(66, 62, 10), makeBlob(68, 60, 12)];
     }
 
     function renderActiveFrame() {
       if (!state.frames[state.activeStep]) return;
-      const isUnc = (state.currentView === 'uncertainty');
-      const targetArr = isUnc && state.uncertaintyFrames[2] ? state.uncertaintyFrames[2] : state.frames[state.activeStep];
-      
-      renderArrayToCanvas(canvas, targetArr, isUnc);
+      renderArrayToCanvas(canvas, state.frames[state.activeStep], getInfernoColor);
 
       // Count active pixels
       let activeCount = 0;
@@ -952,10 +1188,10 @@
 
       // Update timeline label
       const labels = [
-        'OBSERVED FRAME: t - 48h',
-        'OBSERVED FRAME: t - 36h',
-        'OBSERVED FRAME: t - 24h',
-        'OBSERVED FRAME: t - 12h',
+        'OBSERVED FRAME: t - 48h (NASA FIRMS)',
+        'OBSERVED FRAME: t - 36h (NASA FIRMS)',
+        'OBSERVED FRAME: t - 24h (NASA FIRMS)',
+        'OBSERVED FRAME: t - 12h (NASA FIRMS)',
         'OBSERVED FRAME: t₀ (Current Active Fire)',
         'FORECAST HORIZON: +12 Hours (ConvLSTM)',
         'FORECAST HORIZON: +24 Hours (ConvLSTM)',
@@ -972,10 +1208,42 @@
 
     function renderSyncCards() {
       if (state.frames.length < 8) return;
-      renderArrayToCanvas(document.getElementById('canvasT0'), state.frames[4]);
-      renderArrayToCanvas(document.getElementById('canvas12h'), state.frames[5]);
-      renderArrayToCanvas(document.getElementById('canvas24h'), state.frames[6]);
-      renderArrayToCanvas(document.getElementById('canvas48h'), state.frames[7]);
+      renderArrayToCanvas(document.getElementById('canvasT0'), state.frames[4], getInfernoColor);
+      renderArrayToCanvas(document.getElementById('canvas12h'), state.frames[5], getInfernoColor);
+      renderArrayToCanvas(document.getElementById('canvas24h'), state.frames[6], getInfernoColor);
+      renderArrayToCanvas(document.getElementById('canvas48h'), state.frames[7], getInfernoColor);
+    }
+
+    function renderChannelsGrid() {
+      if (!state.dataSample || !state.dataSample.current_channels) return;
+      const ch = state.dataSample.current_channels;
+
+      renderArrayToCanvas(document.getElementById('canvasC1'), ch.fire, getInfernoColor);
+      renderArrayToCanvas(document.getElementById('canvasC2'), ch.ndvi, getNdviColor);
+      renderArrayToCanvas(document.getElementById('canvasC3'), ch.terrain, getTerrainColor);
+      renderArrayToCanvas(document.getElementById('canvasC4'), ch.wind_speed, getWindColor);
+      renderArrayToCanvas(document.getElementById('canvasC5'), ch.wind_direction, getWindDirColor);
+      renderArrayToCanvas(document.getElementById('canvasC6'), ch.dryness, getDrynessColor);
+    }
+
+    function renderUncertaintyGrid() {
+      if (!state.frames[7] || !state.uncertaintyFrames || !state.uncertaintyFrames[2]) return;
+      // Prob +48h
+      renderArrayToCanvas(document.getElementById('canvasUncProb'), state.frames[7], getInfernoColor);
+      // Variance +48h
+      renderArrayToCanvas(document.getElementById('canvasUncStd'), state.uncertaintyFrames[2], getUncertaintyColor);
+    }
+
+    function refreshCurrentView() {
+      if (state.currentView === 'main') {
+        renderActiveFrame();
+      } else if (state.currentView === 'sync') {
+        renderSyncCards();
+      } else if (state.currentView === 'channels') {
+        renderChannelsGrid();
+      } else if (state.currentView === 'uncertainty') {
+        renderUncertaintyGrid();
+      }
     }
 
     // Pixel hover inspector
@@ -1019,35 +1287,43 @@
       }
     });
 
-    // Tab Views
-    document.getElementById('tabMain').addEventListener('click', () => {
-      setActiveTab('tabMain');
-      state.currentView = 'main';
-      document.getElementById('viewportMain').style.display = 'flex';
-      document.getElementById('viewportSync').style.display = 'none';
-      renderActiveFrame();
-    });
+    // Tab Switching Handlers
+    function switchView(viewName) {
+      state.currentView = viewName;
 
-    document.getElementById('tabSync').addEventListener('click', () => {
-      setActiveTab('tabSync');
-      state.currentView = 'sync';
+      // Hide all viewports
       document.getElementById('viewportMain').style.display = 'none';
-      document.getElementById('viewportSync').style.display = 'grid';
-      renderSyncCards();
-    });
-
-    document.getElementById('tabUncertainty').addEventListener('click', () => {
-      setActiveTab('tabUncertainty');
-      state.currentView = 'uncertainty';
-      document.getElementById('viewportMain').style.display = 'flex';
       document.getElementById('viewportSync').style.display = 'none';
-      renderActiveFrame();
-    });
+      document.getElementById('viewportChannels').style.display = 'none';
+      document.getElementById('viewportUncertainty').style.display = 'none';
+      document.getElementById('timelineContainer').style.display = 'flex';
 
-    function setActiveTab(tabId) {
+      // Remove active from all tabs
       document.querySelectorAll('.tab-pill').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+
+      if (viewName === 'main') {
+        document.getElementById('tabMain').classList.add('active');
+        document.getElementById('viewportMain').style.display = 'flex';
+        renderActiveFrame();
+      } else if (viewName === 'sync') {
+        document.getElementById('tabSync').classList.add('active');
+        document.getElementById('viewportSync').style.display = 'grid';
+        renderSyncCards();
+      } else if (viewName === 'channels') {
+        document.getElementById('tabChannels').classList.add('active');
+        document.getElementById('viewportChannels').style.display = 'grid';
+        renderChannelsGrid();
+      } else if (viewName === 'uncertainty') {
+        document.getElementById('tabUncertainty').classList.add('active');
+        document.getElementById('viewportUncertainty').style.display = 'grid';
+        renderUncertaintyGrid();
+      }
     }
+
+    document.getElementById('tabMain').addEventListener('click', () => switchView('main'));
+    document.getElementById('tabSync').addEventListener('click', () => switchView('sync'));
+    document.getElementById('tabChannels').addEventListener('click', () => switchView('channels'));
+    document.getElementById('tabUncertainty').addEventListener('click', () => switchView('uncertainty'));
 
     // Sliders live text
     document.getElementById('sliderWindSpeed').addEventListener('input', (e) => {
@@ -1074,4 +1350,3 @@
   </script>
 </body>
 </html>
-

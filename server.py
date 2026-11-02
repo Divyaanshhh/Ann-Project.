@@ -131,9 +131,9 @@ def get_dataset_sample(source: str = "real"):
             "fire": inputs[-1, 0].tolist(),
             "ndvi": inputs[-1, 1].tolist(),
             "terrain": inputs[-1, 2].tolist(),
-            "wind_speed": float(inputs[-1, 3].mean()),
-            "wind_direction": float(inputs[-1, 4].mean() * 360.0),
-            "dryness": float(inputs[-1, 5].mean())
+            "wind_speed": inputs[-1, 3].tolist(),
+            "wind_direction": inputs[-1, 4].tolist(),
+            "dryness": inputs[-1, 5].tolist()
         },
         "target_fire": targets[:, 0].tolist()
     }
