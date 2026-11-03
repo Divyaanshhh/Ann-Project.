@@ -1,0 +1,4 @@
+[build]
+  # The website lives in frontend/; there is no build step.
+  publish = "frontend"
+  command = ""
