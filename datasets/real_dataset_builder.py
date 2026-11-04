@@ -47,10 +47,15 @@ class RealWildfireDatasetBuilder:
     def download_real_firms_data(self) -> pd.DataFrame:
         """Downloads live NASA FIRMS active fire satellite data or loads local raw cache."""
         cache_file = self.raw_dir / "MODIS_C6_1_Global_7d.csv"
-        
+        alt_cache = self.raw_dir / "firms_active_fire_real.csv"
+
         if cache_file.exists() and cache_file.stat().st_size > 100000:
             logger.info(f"Loading cached real NASA FIRMS active fire data from {cache_file}...")
             return pd.read_csv(cache_file)
+
+        if alt_cache.exists() and alt_cache.stat().st_size > 100000:
+            logger.info(f"Loading cached real NASA FIRMS active fire data from {alt_cache}...")
+            return pd.read_csv(alt_cache)
 
         logger.info("Downloading real NASA FIRMS 7-day global satellite telemetry...")
         for url in self.FIRMS_URLS:
@@ -65,7 +70,12 @@ class RealWildfireDatasetBuilder:
             except Exception as e:
                 logger.warning(f"Error fetching from {url}: {e}")
 
-        raise RuntimeError("Unable to download real NASA FIRMS satellite data and no local cache found.")
+        # If download failed, check alt_cache regardless of size or fall back to adapter
+        if alt_cache.exists():
+            return pd.read_csv(alt_cache)
+
+        from datasets.real_wildfire_adapter import RealWildfireAdapter
+        return RealWildfireAdapter(raw_dir=self.raw_dir, processed_dir=self.processed_dir).fetch_or_load_real_firms_data()
 
     def extract_fire_clusters(self, df: pd.DataFrame) -> List[pd.DataFrame]:
         """Clusters active satellite fire points geographically into discrete wildfire complexes."""
